@@ -61,6 +61,7 @@ end
 
 # Unconstrained solvers
 include("lbfgs.jl")
+include("compact_lbfgs.jl")
 include("trunk.jl")
 include("fomo.jl")
 
