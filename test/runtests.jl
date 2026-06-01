@@ -10,6 +10,7 @@ using JSOSolvers
 
 include("test-gpu.jl")
 include("compact_lbfgs_gpu.jl")
+include("lbfgs_gpu.jl")
 
 @testset "Test parameterset" begin
   @testset "Test unconstrained parameters $paramset" for (paramset, fun) in (

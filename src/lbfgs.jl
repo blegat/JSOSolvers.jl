@@ -118,7 +118,11 @@ function LBFGSSolver(nlp::M; kwargs...) where {T, V, M <: AbstractNLPModel{T, V}
   xt = V(undef, nvar)
   gx = V(undef, nvar)
   gt = V(undef, nvar)
-  H = InverseLBFGSOperator(T, nvar, mem = mem, scaling = true)
+  # Pass `V` so the operator's `data.Ax` / `s` / `y` live on the same
+  # device as the NLP's working vectors. Without this, `lbfgs_multiply`'s
+  # `q .= x` broadcasts a `CuVector` into a CPU `Vector` and trips
+  # `Scalar indexing is disallowed` (`LinearOperators/src/lbfgs.jl:128`).
+  H = InverseLBFGSOperator(T, V, nvar, mem = mem, scaling = true)
   h = LineModel(nlp, x, d)
   Op = typeof(H)
   return LBFGSSolver{T, V, Op, M}(x, xt, gx, gt, d, H, h, params)
